@@ -1,4 +1,4 @@
-macro(ee_enable_clang_tidy target WARNINGS_AS_ERRORS)
+macro(ee_enable_clang_tidy)
 
 	find_program(CLANGTIDY clang-tidy)
 
@@ -18,7 +18,7 @@ macro(ee_enable_clang_tidy target WARNINGS_AS_ERRORS)
 			endif()
 		endif()
 
-		if(${WARNINGS_AS_ERRORS})
+		if(ee_WARNINGS_AS_ERRORS)
 			list(APPEND CLANG_TIDY_OPTIONS -warnings-as-errors=*)
 		endif()
 

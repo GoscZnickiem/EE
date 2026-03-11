@@ -1,0 +1,52 @@
+---
+Checks: '-*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  cert-dcl50-cpp,
+  cert-env33-c,
+  cert-err34-c,
+  cert-err52-cpp,
+  cert-err60-cpp,
+  cert-flp30-c,
+  cert-msc50-cpp,
+  cert-msc51-cpp,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-avoid-reference-coroutine-parameters,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-avoid-goto,
+  google-build-using-namespace,
+  google-explicit-constructor,
+  google-global-names-in-headers,
+  google-readability-casting,
+  google-runtime-int,
+  google-runtime-operator,
+  hicpp-*,
+  -hicpp-c-arrays,
+  -hicpp-avoid-c-arrays,
+  -hicpp-uppercase-literal-suffix,
+  misc-*,
+  -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
+  modernize-*,
+  -modernize-avoid-c-arrays,
+  -modernize-use-trailing-return-type,
+  readability-*,
+  -readability-identifier-length,
+  -readability-uppercase-literal-suffix
+  '
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     none
+
+CheckOptions:
+    - key: bugprone-argument-comment.StrictMode
+      value: 1
+    - key: bugprone-exception-escape.FunctionsThatShouldNotThrow
+      value: WinMain,SDL_main
+    - key: readability-braces-around-statements.ShortStatementLines
+      value: 1
+    - key: hicpp-braces-around-statements.ShortStatementLines
+      value: 1

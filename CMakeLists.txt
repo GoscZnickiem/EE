@@ -1,21 +1,17 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.24)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(EELang
     VERSION 0.0.0
-	DESCRIPTION "The Extra Eccentric language tools"
+	DESCRIPTION "The Extra Eccentric Language"
     # HOMEPAGE_URL ""
     LANGUAGES CXX
 )
 
 include(cmake/PreventInSourceBuild.cmake)
-
-include(CMakeDependentOption)
-include(CheckCXXCompilerFlag)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(__BUILD_DEBUG__)
@@ -35,10 +31,24 @@ elseif(${USE_COMPILER} STREQUAL "clang")
 	add_compile_definitions(__COMPILER_CLANG__)
 endif()
 
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ProjectOptions.cmake)
-include(cmake/ProjectOptions.cmake)
-ee_options_setup()
-ee_apply_options()
-target_compile_features(ee_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(src)
+include(cmake/CompilerWarnings.cmake)
+set_project_warnings()
+
+if(ee_CLANG_TIDY)
+	include(cmake/ClangTidy.cmake)
+	ee_enable_clang_tidy()
+endif()
+
+if(ee_CPPCHECK)
+	include(cmake/CppCheck.cmake)
+	ee_enable_cppcheck()
+endif()
+
+if(ee_IPO)
+	include(cmake/Ipo.cmake)
+	ee_ipo()
+endif()
+
+add_subdirectory(lib)
