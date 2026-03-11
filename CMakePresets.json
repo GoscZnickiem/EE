@@ -1,0 +1,52 @@
+{
+	"version": 3,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 21
+	},
+
+	"configurePresets": [
+		{
+			"name": "base",
+			"hidden": true,
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/${presetName}"
+		},
+		{
+			"name": "gcc-debug",
+			"inherits": "base",
+			"cacheVariables": {
+				"CMAKE_CXX_COMPILER": "g++",
+				"USE_COMPILER": "gcc",
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "gcc-release",
+			"inherits": "base",
+			"cacheVariables": {
+				"CMAKE_CXX_COMPILER": "g++",
+				"USE_COMPILER": "gcc",
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "clang-debug",
+			"inherits": "base",
+			"cacheVariables": {
+				"CMAKE_CXX_COMPILER": "clang++",
+				"USE_COMPILER": "clang",
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "clang-release",
+			"inherits": "base",
+			"cacheVariables": {
+				"CMAKE_CXX_COMPILER": "clang++",
+				"USE_COMPILER": "clang",
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		}
+	]
+}
