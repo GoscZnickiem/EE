@@ -43,6 +43,10 @@ macro(set_project_warnings)
 		list(APPEND PROJECT_WARNINGS_CXX -Werror)
 	endif()
 
-	add_compile_options(${PROJECT_WARNINGS_CXX})
+	target_compile_options(
+		ee_project_options
+		INTERFACE
+		${PROJECT_WARNINGS_CXX}
+	)
 
 endmacro()

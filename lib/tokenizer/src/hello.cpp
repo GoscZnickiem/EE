@@ -1,8 +1,9 @@
 #include "tokenizer/hello.hpp"
 #include <iostream>
 
-int lol;
-
-void hello() {
+int hello() {
 	std::cout << ":3\n";
+
+	constexpr auto ret = 42;
+	return ret;
 }

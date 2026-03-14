@@ -5,30 +5,32 @@ macro(ee_enable_cppcheck)
 	if(CPPCHECK)
 		set(CPPCHECK_TEMPLATE "gcc")
 
-		if("${CPPCHECK_OPTIONS}" STREQUAL "")
-			set(CMAKE_CXX_CPPCHECK
-				${CPPCHECK}
-				--template=${CPPCHECK_TEMPLATE}
-				--enable=style,performance,warning,portability
-				--inline-suppr
-				--suppress=cppcheckError
-				--suppress=internalAstError
-				--suppress=unmatchedSuppression
-				--suppress=passedByValue
-				--suppress=syntaxError
-				--suppress=preprocessorErrorDirective
-				--inconclusive
-			)
-		else()
-			set(CMAKE_CXX_CPPCHECK ${CPPCHECK} --template=${CPPCHECK_TEMPLATE} ${CPPCHECK_OPTIONS})
-		endif()
+		set(CPPCHECK_OPTIONS
+			${CPPCHECK}
+			--template=${CPPCHECK_TEMPLATE}
+			--enable=style,performance,warning,portability
+			--inline-suppr
+			--suppress=cppcheckError
+			--suppress=internalAstError
+			--suppress=unmatchedSuppression
+			--suppress=passedByValue
+			--suppress=syntaxError
+			--suppress=preprocessorErrorDirective
+			--inconclusive
+		)
 
 		if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
-			set(CMAKE_CXX_CPPCHECK ${CMAKE_CXX_CPPCHECK} --std=c++${CMAKE_CXX_STANDARD})
+			set(CPPCHECK_OPTIONS ${CPPCHECK_OPTIONS} --std=c++${CMAKE_CXX_STANDARD})
 		endif()
+
 		if(ee_WARNINGS_AS_ERRORS)
-			list(APPEND CMAKE_CXX_CPPCHECK --error-exitcode=2)
+			list(APPEND CPPCHECK_OPTIONS --error-exitcode=2)
 		endif()
+
+		set_target_properties(
+			ee_project_options PROPERTIES
+			CXX_CPPCHECK ${CPPCHECK_OPTIONS}
+		)
 
 		message(${WARNING_MESSAGE} "ccpcheck set up")
 	else()

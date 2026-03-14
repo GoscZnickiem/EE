@@ -33,6 +33,8 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_library(ee_project_options INTERFACE)
+
 include(cmake/CompilerWarnings.cmake)
 set_project_warnings()
 
@@ -50,5 +52,10 @@ if(ee_IPO)
 	include(cmake/Ipo.cmake)
 	ee_ipo()
 endif()
+
+if(ee_BUILD_TESTS)
+	include(cmake/Tests.cmake)
+endif()
+include(cmake/AddTestSubdirectory.cmake)
 
 add_subdirectory(lib)

@@ -13,7 +13,7 @@
 			"binaryDir": "${sourceDir}/build/${presetName}",
 			"cacheVariables": {
 				"ee_WARNINGS_AS_ERRORS" : "ON",
-				"ee_CLANG_TIDY" : "OFF",
+				"ee_CLANG_TIDY" : "ON",
 				"ee_CPPCHECK" : "ON"
 			}
 		},
@@ -23,7 +23,8 @@
 			"hidden": true,
 			"cacheVariables": {
 				"ee_IPO" : "OFF",
-				"CMAKE_BUILD_TYPE": "Debug"
+				"CMAKE_BUILD_TYPE": "Debug",
+				"ee_BUILD_TESTS": "ON"
 			}
 		},
 		{
@@ -69,32 +70,23 @@
 		},
 		{
 			"name": "asan-ubsan",
-			"inherits": "debug",
+			"inherits": "clang-debug",
 			"cacheVariables": {
-				"CMAKE_CXX_COMPILER": "clang++",
-				"USE_COMPILER": "clang",
-				"CMAKE_CXX_FLAGS": "-fsanitize=address,undefined,leak -fno-omit-frame-pointer",
-				"CMAKE_LINKER_FLAGS": "-fsanitize=address,undefined,leak"
+				"CMAKE_CXX_FLAGS": "-fsanitize=address,undefined,leak -fno-omit-frame-pointer"
 			}
 		},
 		{
 			"name": "tsan",
-			"inherits": "debug",
+			"inherits": "clang-debug",
 			"cacheVariables": {
-				"CMAKE_CXX_COMPILER": "clang++",
-				"USE_COMPILER": "clang",
-				"CMAKE_CXX_FLAGS": "-fsanitize=thread",
-				"CMAKE_LINKER_FLAGS": "-fsanitize=thread"
+				"CMAKE_CXX_FLAGS": "-fsanitize=thread"
 			}
 		},
 		{
 			"name": "msan",
-			"inherits": "debug",
+			"inherits": "clang-debug",
 			"cacheVariables": {
-				"CMAKE_CXX_COMPILER": "clang++",
-				"USE_COMPILER": "clang",
-				"CMAKE_CXX_FLAGS": "-fsanitize=memory",
-				"CMAKE_LINKER_FLAGS": "-fsanitize=memory"
+				"CMAKE_CXX_FLAGS": "-fsanitize=memory"
 			}
 		}
 	],
@@ -115,6 +107,18 @@
 		{
 			"name": "clang-release",
 			"configurePreset": "clang-release"
+		},
+		{
+			"name": "asan-ubsan",
+			"configurePreset": "asan-ubsan"
+		},
+		{
+			"name": "tsan",
+			"configurePreset": "tsan"
+		},
+		{
+			"name": "msan",
+			"configurePreset": "msan"
 		}
 	]
 }

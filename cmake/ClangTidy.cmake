@@ -22,7 +22,10 @@ macro(ee_enable_clang_tidy)
 			list(APPEND CLANG_TIDY_OPTIONS -warnings-as-errors=*)
 		endif()
 
-		set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
+		set_target_properties(
+			ee_project_options PROPERTIES
+			CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS}
+		)
 
 		message(${WARNING_MESSAGE} "clang-tidy set up")
 	else()

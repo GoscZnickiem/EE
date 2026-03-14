@@ -1,0 +1,24 @@
+include(FetchContent)
+
+FetchContent_Declare(
+	googletest
+	URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+include(GoogleTest)
+
+function(add_ee_test TARGET)
+	add_executable(${TARGET} ${TARGET}.cpp)
+
+	target_link_libraries(${TARGET}
+		PRIVATE
+		gtest_main
+		${ARGN}
+	)
+
+	gtest_discover_tests(${TARGET})
+endfunction()
