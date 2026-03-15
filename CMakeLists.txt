@@ -58,4 +58,4 @@ if(ee_BUILD_TESTS)
 endif()
 include(cmake/AddTestSubdirectory.cmake)
 
-add_subdirectory(lib)
+add_subdirectory(ee)
