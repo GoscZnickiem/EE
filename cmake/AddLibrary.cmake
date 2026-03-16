@@ -16,6 +16,10 @@ function(ee_add_library LIB_NAME)
 			ee_project_options
 			${ARGN}
 		)
+		target_include_directories(${LIB_NAME}
+			PUBLIC
+			${CMAKE_CURRENT_SOURCE_DIR}/include
+		)
 	else()
 		add_library(${LIB_NAME} INTERFACE)
 		target_link_libraries(${LIB_NAME}
@@ -23,12 +27,12 @@ function(ee_add_library LIB_NAME)
 			ee_project_options
 			${ARGN}
 		)
+		target_include_directories(${LIB_NAME}
+			INTERFACE
+			${CMAKE_CURRENT_SOURCE_DIR}/include
+		)
 	endif()
 
-	target_include_directories(${LIB_NAME}
-		PUBLIC
-		${CMAKE_CURRENT_SOURCE_DIR}/include
-	)
 
 	if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
 		ee_add_test_subdirectory(test)

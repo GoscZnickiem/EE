@@ -56,6 +56,8 @@ endif()
 if(ee_BUILD_TESTS)
 	include(cmake/Tests.cmake)
 endif()
+
+include(cmake/AddLibrary.cmake)
 include(cmake/AddTestSubdirectory.cmake)
 
 add_subdirectory(ee)
