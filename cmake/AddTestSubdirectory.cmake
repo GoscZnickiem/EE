@@ -1,4 +1,4 @@
-macro(add_test_subdirectory DIR)
+macro(ee_add_test_subdirectory DIR)
 	if(ee_BUILD_TESTS)
 		add_subdirectory(${DIR})
 	endif()

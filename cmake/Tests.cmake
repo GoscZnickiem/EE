@@ -11,7 +11,7 @@ enable_testing()
 
 include(GoogleTest)
 
-function(add_ee_test TARGET)
+function(ee_add_ut TARGET)
 	add_executable(${TARGET} ${TARGET}.cpp)
 
 	target_link_libraries(${TARGET}
