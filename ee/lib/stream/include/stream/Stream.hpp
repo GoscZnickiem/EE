@@ -9,19 +9,19 @@ template <typename T>
 concept Streamable = std::movable<T> || std::copyable<T>;
 
 template <Streamable T>
-class stream {
+class Stream {
 public:
-	stream() = default;
-	virtual ~stream() = default;
-	stream(const stream&) = delete;
-	stream(stream&&) = delete;
-	stream& operator=(const stream&) = delete;
-	stream& operator=(stream&&) = delete;
+	Stream() = default;
+	virtual ~Stream() = default;
+	Stream(const Stream&) = delete;
+	Stream(Stream&&) = delete;
+	Stream& operator=(const Stream&) = delete;
+	Stream& operator=(Stream&&) = delete;
 
 	virtual T get() = 0;
 	[[nodiscard]] virtual bool done() const = 0;
 
-	stream<T>& operator>>(T& output) {
+	Stream<T>& operator>>(T& output) {
 		output = get();
 		return *this;
 	}

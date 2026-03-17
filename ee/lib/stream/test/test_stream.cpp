@@ -1,4 +1,4 @@
-#include "stream/stream.hpp"
+#include "stream/Stream.hpp"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-class test_int_stream : public ee::stream::stream<int> {
+class test_int_stream : public ee::stream::Stream<int> {
 	std::vector<int> data;
 	size_t idx = 0;
 
@@ -20,7 +20,7 @@ public:
 	}
 };
 
-class test_ptr_stream : public ee::stream::stream<std::unique_ptr<int>> {
+class test_ptr_stream : public ee::stream::Stream<std::unique_ptr<int>> {
 	std::vector<std::unique_ptr<int>> data;
 	size_t idx = 0;
 
@@ -81,7 +81,7 @@ TEST(test_stream, OperatorShiftReturnsThis) {
 }
 
 TEST(test_stream, MoveOnlyStringStream) {
-	class StringStream : public ee::stream::stream<std::string> {
+	class StringStream : public ee::stream::Stream<std::string> {
 		std::vector<std::string> data;
 		size_t idx = 0;
 
