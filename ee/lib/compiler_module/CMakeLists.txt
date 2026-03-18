@@ -1,0 +1,1 @@
+ee_add_library(compiler_module)

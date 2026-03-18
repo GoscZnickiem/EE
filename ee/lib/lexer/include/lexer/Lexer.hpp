@@ -3,11 +3,12 @@
 
 #include "lexer/Token.hpp"
 
-#include <stream/stream.hpp>
+#include <stream/Stream.hpp>
+huj dupa
 
 namespace ee::lex {
 
-class lexer : public stream::stream<Token> {
+class Lexer : public stream::Stream<Token> {
 public:
 
 };

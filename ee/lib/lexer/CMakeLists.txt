@@ -1,4 +1,4 @@
 ee_add_library(lexer
 	types
-	stream
+	compiler_module
 )
