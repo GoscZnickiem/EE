@@ -3,14 +3,32 @@
 
 #include "lexer/Token.hpp"
 
-#include <stream/Stream.hpp>
-huj dupa
+#include <compiler_unit/Unit.hpp>
 
 namespace ee::lex {
 
-class Lexer : public stream::Stream<Token> {
-public:
+class Lexer : public cmpu::Unit<Char, Token> {
+private:
+	enum class State {
+		INIT,
+		COMMENT_LINE,
+		COMMENT_BLOCK,
+		STRING_LITERAL,
+		NUMERIC_LITERAL,
+		CHAR_LITERAL,
+		IDENTIFIER,
+		SYMBOL,
+		DOT,
+		SLASH
+	};
 
+	State state{State::INIT};
+	String buffer;
+
+public:
+	emitted_type emit() override;
+
+	[[nodiscard]] bool done() const override;
 };
 
 } // namespace ee::lex

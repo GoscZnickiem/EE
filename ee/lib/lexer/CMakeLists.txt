@@ -1,4 +1,4 @@
 ee_add_library(lexer
 	types
-	compiler_module
+	compiler_unit
 )

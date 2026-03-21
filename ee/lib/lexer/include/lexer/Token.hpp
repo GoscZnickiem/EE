@@ -11,8 +11,9 @@ public:
 	enum class Type {
 		NAME,
 		SYMBOL,
-		NUMERAL,
-		STRING,
+		NUMERIC_LITERAL,
+		STRING_LITERAL,
+		CHAR_LITERAL,
 		SEMICOLON,
 		COMMA,
 		BRACE_L,
