@@ -1,11 +1,11 @@
-#ifndef EE_LIB_COMPILERMODULE_EMITTER
-#define EE_LIB_COMPILERMODULE_EMITTER
+#ifndef EE_LIB_COMPILERUNIT_EMITTER
+#define EE_LIB_COMPILERUNIT_EMITTER
 
-#include "compiler_module/Streamable.hpp"
+#include "compiler_unit/Streamable.hpp"
 
 #include <concepts>
 
-namespace ee::cmod {
+namespace ee::cmpu {
 
 template <Streamable EmittedType>
 class Emitter {
@@ -22,19 +22,23 @@ public:
 	virtual emitted_type emit() = 0;
 	[[nodiscard]] virtual bool done() const = 0;
 
-	Emitter<emitted_type>& operator>>(emitted_type& output) {
-		output = emit();
-		return *this;
-	}
-
-	bool operator()() const {
-		return done();
+	explicit operator bool() const {
+		return !done();
 	}
 };
 
 template <typename T>
 concept Emitter_c = requires { typename T::emitted_type; } && std::derived_from<T, Emitter<typename T::emitted_type>>;
 
-} // namespace ee::cmod
+template <typename T, typename EmittedType>
+concept Emitter_of_c = Emitter_c<T> && std::same_as<typename T::emitted_type, EmittedType>;
 
-#endif // !EE_LIB_COMPILERMODULE_EMITTER
+template <Emitter_c T>
+T& operator>>(T& emitter, typename T::emitted_type& output) {
+	output = emitter.emit();
+	return emitter;
+}
+
+} // namespace ee::cmpu
+
+#endif // !EE_LIB_COMPILERUNIT_EMITTER

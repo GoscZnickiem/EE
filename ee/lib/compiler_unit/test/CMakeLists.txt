@@ -1,0 +1,3 @@
+ee_add_ut(test_cmpu_emitter compiler_unit)
+ee_add_ut(test_cmpu_receiver compiler_unit)
+ee_add_ut(test_cmpu_unit compiler_unit)
