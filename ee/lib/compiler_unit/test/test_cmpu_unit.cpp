@@ -70,7 +70,8 @@ TEST(cmpu_Unit, TransformsInput) {
 	u << e;
 
 	while (u) {
-		bool n = u.emit();
+		bool n{};
+		u >> n;
 		res.push_back(n);
 	}
 

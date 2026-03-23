@@ -15,7 +15,7 @@ function(ee_add_ut TARGET)
 	add_executable(${TARGET} ${TARGET}.cpp)
 
 	target_link_libraries(${TARGET}
-		PRIVATE
+		PUBLIC
 		gtest_main
 		${ARGN}
 	)
