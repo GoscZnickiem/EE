@@ -14,7 +14,7 @@ public:
 		return (get() % 2) == 0;
 	}
 
-	[[nodiscard]] bool done() const override {
+	[[nodiscard]] bool done() override {
 		return input_empty();
 	}
 };
@@ -25,7 +25,7 @@ public:
 		return get() ? "even" : "odd";
 	}
 
-	[[nodiscard]] bool done() const override {
+	[[nodiscard]] bool done() override {
 		return input_empty();
 	}
 };
@@ -42,7 +42,7 @@ public:
 		return data.at(index++);
 	}
 
-	[[nodiscard]] bool done() const override {
+	[[nodiscard]] bool done() override {
 		return index >= data.size();
 	}
 };

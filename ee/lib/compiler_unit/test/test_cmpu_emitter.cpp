@@ -18,7 +18,7 @@ public:
 		return std::make_unique<int>(data.at(index++));
 	}
 
-	[[nodiscard]] bool done() const override {
+	[[nodiscard]] bool done() override {
 		return index >= data.size();
 	}
 };
@@ -35,7 +35,7 @@ public:
 		return data.at(index++);
 	}
 
-	[[nodiscard]] bool done() const override {
+	[[nodiscard]] bool done() override {
 		return index >= data.size();
 	}
 };

@@ -20,9 +20,9 @@ public:
 	Emitter& operator=(Emitter&&) = delete;
 
 	virtual emitted_type emit() = 0;
-	[[nodiscard]] virtual bool done() const = 0;
+	[[nodiscard]] virtual bool done() = 0;
 
-	explicit operator bool() const {
+	explicit operator bool() {
 		return !done();
 	}
 };
