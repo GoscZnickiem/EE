@@ -1,13 +1,14 @@
 #ifndef EE_LIB_LEXER_LEXER
 #define EE_LIB_LEXER_LEXER
 
-#include "lexer/Token.hpp"
+#include "types/Token.hpp"
+#include "types/Character.hpp"
 
 #include <compiler_unit/Unit.hpp>
 
 namespace ee::lex {
 
-class Lexer : public cmpu::Unit<Char, Token> {
+class Lexer : public cmpu::Unit<Character, Token> {
 private:
 	enum class State {
 		INIT,
@@ -28,7 +29,7 @@ private:
 public:
 	emitted_type emit() override;
 
-	[[nodiscard]] bool done() const override;
+	[[nodiscard]] bool done() override;
 };
 
 } // namespace ee::lex

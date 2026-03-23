@@ -1,8 +1,9 @@
 #ifndef EE_LIB_TYPES_CHARACTER
 #define EE_LIB_TYPES_CHARACTER
 
+#include "types/Types.hpp"
+
 #include <cstddef>
-#include <types/Types.hpp>
 
 namespace ee {
 

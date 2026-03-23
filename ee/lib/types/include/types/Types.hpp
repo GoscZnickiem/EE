@@ -5,7 +5,7 @@
 
 namespace ee {
 
-using Char = char8_t;
+using Char = char;
 using String = std::basic_string<Char>;
 
 } // namespace ee

@@ -1,10 +1,11 @@
-#ifndef EE_LIB_LEXER_TOKEN
-#define EE_LIB_LEXER_TOKEN
+#ifndef EE_LIB_TYPES_TOKEN
+#define EE_LIB_TYPES_TOKEN
+
+#include "types/Types.hpp"
 
 #include <cstddef>
-#include <types/Types.hpp>
 
-namespace ee::lex {
+namespace ee {
 
 class Token {
 public:
@@ -32,6 +33,6 @@ public:
 	MetaData meta_data;
 };
 
-} // namespace ee::lex
+} // namespace ee
 
-#endif // !EE_LIB_LEXER_TOKEN
+#endif // !EE_LIB_TYPES_TOKEN
