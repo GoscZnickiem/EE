@@ -8,14 +8,14 @@
 
 namespace test {
 
-class FileReader : public ee::cmpu::Emitter<ee::Character> {
+class Reader : public ee::cmpu::Emitter<ee::Character> {
 private:
 	ee::String data;
 	std::size_t column{1};
 	std::size_t index{0};
 
 public:
-	explicit FileReader(ee::String input) : data(std::move(input)) {}
+	explicit Reader(ee::String input) : data(std::move(input)) {}
 
 	ee::Character emit() override {
 		return {
@@ -24,7 +24,7 @@ public:
 	}
 
 	[[nodiscard]] bool done() override {
-		return index == data.length() - 1;
+		return index == data.length();
 	}
 };
 
@@ -32,15 +32,40 @@ public:
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-TEST(cmpu_Lexer, EmitsIdentifierToken) {
-	ee::String ref = "testIdentifier";
-	ee::Token res{};
-	test::FileReader reader{ref};
+TEST(lex_Lexer, EmitsSemicolon) {
+	test::Reader reader{";"};
 	ee::lex::Lexer lexer;
 
 	lexer << reader;
 
-	lexer >> res;
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::SEMICOLON);
+}
+
+TEST(lex_Lexer, EmitsComma) {
+	test::Reader reader{","};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::COMMA);
+}
+
+TEST(lex_Lexer, EmitsBraceL) {
+	test::Reader reader{"{"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_L);
+}
+
+TEST(lex_Lexer, EmitsBraceR) {
+	test::Reader reader{"}"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

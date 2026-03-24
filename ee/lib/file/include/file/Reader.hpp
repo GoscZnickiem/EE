@@ -16,7 +16,6 @@ private:
 	std::filesystem::path source_file;
 
 	Character::MetaData current_metadata;
-	Char current_char;
 
 public:
 	Character emit() override;
