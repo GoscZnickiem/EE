@@ -10,6 +10,7 @@ namespace ee {
 class Token {
 public:
 	enum class Type {
+		INVALID,
 		NAME,
 		SYMBOL,
 		NUMERIC_LITERAL,

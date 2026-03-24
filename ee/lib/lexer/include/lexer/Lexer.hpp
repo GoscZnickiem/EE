@@ -13,9 +13,10 @@ private:
 	enum class State {
 		INIT,
 		SLASH,
-		DOT,
 		COMMENT_LINE,
 		COMMENT_BLOCK,
+		COMMENT_STAR,
+		DOT,
 		STRING_LITERAL,
 		NUMERIC_LITERAL,
 		CHAR_LITERAL,
@@ -23,26 +24,32 @@ private:
 		SYMBOL,
 	};
 
-	bool state_init();
-	bool state_slash();
-	bool state_dot();
-	bool state_comment_line();
-	bool state_comment_block();
-	bool state_string_literal();
-	bool state_numeric_literal();
-	bool state_char_literal();
-	bool state_identifier();
-	bool state_symbol();
+	void state_init();
+	void state_slash();
+	void state_comment_line();
+	void state_comment_block();
+	void state_comment_star();
+	void state_dot();
+	void state_string_literal();
+	void state_numeric_literal();
+	void state_char_literal();
+	void state_identifier();
+	void state_symbol();
 
+	bool reading{false};
 	State state{State::INIT};
 	std::optional<Character> character;
 	Char c{};
-	Token buffer{};
+	Token buffer{.type = Token::Type::INVALID, .data{}, .meta_data{}};
+	Token current_token{.type = Token::Type::INVALID, .data{}, .meta_data{}};
 
-	bool push();
-	bool push(State s);
-	bool push(Token::Type t);
-	bool step();
+	void push();
+	void push(State s);
+	void push(Token::Type t);
+	void discard();
+	void discard(State s);
+	void step();
+	void read_next_token();
 
 public:
 	emitted_type emit() override;

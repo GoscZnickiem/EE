@@ -68,4 +68,59 @@ TEST(lex_Lexer, EmitsBraceR) {
 	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
 }
 
+TEST(lex_Lexer, EmitsTokensSequentially) {
+	test::Reader reader{";,{}"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::SEMICOLON);
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::COMMA);
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_L);
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
+}
+
+TEST(lex_Lexer, IgnoresWhitespaces) {
+	test::Reader reader{"   \t \n ;  \t \n ,"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::SEMICOLON);
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::COMMA);
+}
+
+TEST(lex_Lexer, IgnoresLineComment) {
+	test::Reader reader{"{// This comment will be completely ignored ; \n}"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_L);
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
+}
+
+TEST(lex_Lexer, IgnoresBlockComment) {
+	test::Reader reader{"{/* This comment will be completely ignored * ; */}"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_L);
+	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
+}
+
+TEST(lex_Lexer, IsDoneAfterLastToken) {
+	test::Reader reader{";;;"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	lexer.emit();
+	lexer.emit();
+	lexer.emit();
+
+	EXPECT_TRUE(lexer.done());
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
