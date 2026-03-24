@@ -5,27 +5,21 @@ macro(ee_enable_clang_tidy)
 	if(CLANGTIDY)
 		set(CLANG_TIDY_OPTIONS
 			${CLANGTIDY}
-			-extra-arg=-Wno-unknown-warning-option
-			-extra-arg=-Wno-ignored-optimization-argument
-			-extra-arg=-Wno-unused-command-line-argument
-			-p)
+			--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy
+			-p=${CMAKE_BINARY_DIR}
+		)
 
 		if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
-			if("${CLANG_TIDY_OPTIONS_DRIVER_MODE}" STREQUAL "cl")
-				set(CLANG_TIDY_OPTIONS ${CLANG_TIDY_OPTIONS} -extra-arg=/std:c++${CMAKE_CXX_STANDARD})
-			else()
-				set(CLANG_TIDY_OPTIONS ${CLANG_TIDY_OPTIONS} -extra-arg=-std=c++${CMAKE_CXX_STANDARD})
-			endif()
+			list(APPEND CLANG_TIDY_OPTIONS
+                -extra-arg=-std=c++${CMAKE_CXX_STANDARD}
+            )
 		endif()
 
 		if(ee_WARNINGS_AS_ERRORS)
 			list(APPEND CLANG_TIDY_OPTIONS -warnings-as-errors=*)
 		endif()
 
-		set_target_properties(
-			ee_project_options PROPERTIES
-			CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS}
-		)
+		set_property(TARGET ee_project_options PROPERTY EE_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
 
 		message(${WARNING_MESSAGE} "clang-tidy set up")
 	else()

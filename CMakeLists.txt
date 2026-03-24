@@ -35,6 +35,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(ee_project_options INTERFACE)
 
+include(cmake/Options.cmake)
 include(cmake/CompilerWarnings.cmake)
 set_project_warnings()
 

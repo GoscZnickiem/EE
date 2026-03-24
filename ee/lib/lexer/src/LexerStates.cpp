@@ -5,44 +5,34 @@
 
 namespace ee::lex {
 
+namespace {
+
+int test() {
+	return 0;
+}
+
+} // namespace
+
 void Lexer::state_init() {
-	if (std::isspace(c) != 0) {
-		discard();
-	} else if (c == ';') {
-		push(Token::Type::SEMICOLON);
-	} else if (c == ',') {
-		push(Token::Type::COMMA);
-	} else if (c == '{') {
-		push(Token::Type::BRACE_L);
-	} else if (c == '}') {
-		push(Token::Type::BRACE_R);
-	} else if (c == '.') {
-		push(State::DOT);
-	} else if (c == '/') {
-		push(State::SLASH);
-	} else if (c == '"') {
-		push(State::STRING_LITERAL);
-	} else if (c == '\'') {
-		push(State::CHAR_LITERAL);
-	} else if (std::isalpha(c) != 0 || c == '_') {
-		push(State::IDENTIFIER);
-	} else if (std::isdigit(c) != 0) {
-		push(State::NUMERIC_LITERAL);
-	} else if (std::ispunct(c) != 0) {
-		push(State::SYMBOL);
-	} else {
-		throw std::runtime_error("what the fuck happened? What is this: '" + std::to_string(c) + "'.");
-	}
+	if (std::isspace(c) != test()) discard();
+	else if (c == ';') push(Token::Type::SEMICOLON);
+	else if (c == ',') push(Token::Type::COMMA);
+	else if (c == '{') push(Token::Type::BRACE_L);
+	else if (c == '}') push(Token::Type::BRACE_R);
+	else if (c == '.') push(State::DOT);
+	else if (c == '/') push(State::SLASH);
+	else if (c == '"') push(State::STRING_LITERAL);
+	else if (c == '\'') push(State::CHAR_LITERAL);
+	else if (std::isalpha(c) != 0 || c == '_') push(State::IDENTIFIER);
+	else if (std::isdigit(c) != 0) push(State::NUMERIC_LITERAL);
+	else if (std::ispunct(c) != 0) push(State::SYMBOL);
+	else throw std::runtime_error("what the fuck happened? What is this: '" + std::to_string(c) + "'.");
 }
 
 void Lexer::state_slash() {
-	if (c == '/') {
-		discard(State::COMMENT_LINE);
-	} else if (c == '*') {
-		discard(State::COMMENT_BLOCK);
-	} else {
-		state = State::SYMBOL;
-	}
+	if (c == '/') discard(State::COMMENT_LINE);
+	else if (c == '*') discard(State::COMMENT_BLOCK);
+	else state = State::SYMBOL;
 }
 
 void Lexer::state_comment_line() {

@@ -52,6 +52,7 @@ function(ee_add_library LIB_NAME)
 		)
 	endif()
 
+	ee_apply_options(${LIB_NAME})
 
 	if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
 		ee_add_test_subdirectory(test)
