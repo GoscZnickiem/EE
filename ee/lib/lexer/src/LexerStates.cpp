@@ -1,7 +1,9 @@
 #include "lexer/Lexer.hpp"
+#include "types/Token.hpp"
 
 #include <cctype>
 #include <stdexcept>
+#include <string>
 
 namespace ee::lex {
 
@@ -50,27 +52,33 @@ void Lexer::state_comment_star() {
 }
 
 void Lexer::state_dot() {
-	throw std::runtime_error("not implemented " + std::to_string(**character));
+	if(c == '0') discard();
+	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
 void Lexer::state_string_literal() {
-	throw std::runtime_error("not implemented " + std::to_string(**character));
+	if(c == '0') discard();
+	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
 void Lexer::state_numeric_literal() {
-	throw std::runtime_error("not implemented " + std::to_string(**character));
+	if(c == '0') discard();
+	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
 void Lexer::state_char_literal() {
-	throw std::runtime_error("not implemented " + std::to_string(**character));
+	if(c == '0') discard();
+	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
 void Lexer::state_identifier() {
-	throw std::runtime_error("not implemented " + std::to_string(**character));
+	if(c == '0') discard();
+	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
 void Lexer::state_symbol() {
-	throw std::runtime_error("not implemented " + std::to_string(**character));
+	if(c == '0') discard();
+	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
 } // namespace ee::lex

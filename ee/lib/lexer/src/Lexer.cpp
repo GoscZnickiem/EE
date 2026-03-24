@@ -1,4 +1,5 @@
 #include "lexer/Lexer.hpp"
+#include <cassert>
 
 namespace ee::lex {
 
@@ -29,6 +30,8 @@ void Lexer::step() {
 }
 
 void Lexer::push() {
+	assert(character);
+
 	if (buffer.data.empty()) {
 		buffer.meta_data.lineStart = character->meta_data.line;
 		buffer.meta_data.columnStart = character->meta_data.column;
