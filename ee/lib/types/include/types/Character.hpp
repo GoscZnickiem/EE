@@ -17,7 +17,7 @@ public:
 	Char c;
 	MetaData meta_data;
 
-	[[nodiscard]] Char operator*() const {
+	[[nodiscard]] Char operator*() const noexcept {
 		return c;
 	}
 };
