@@ -1,6 +1,7 @@
 #include "compiler_unit/Emitter.hpp"
 #include "lexer/Lexer.hpp"
 #include "types/Character.hpp"
+#include "types/Token.hpp"
 #include "types/Types.hpp"
 
 #include <cstddef>
@@ -66,6 +67,34 @@ TEST(lex_Lexer, EmitsBraceR) {
 	lexer << reader;
 
 	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
+}
+
+TEST(lex_Lexer, EmitsName) {
+	ee::String ref{"identifier0_1name"};
+	ee::Token res;
+	test::Reader reader{ref};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	lexer >> res;
+
+	EXPECT_EQ(res.type, ee::Token::Type::NAME);
+	EXPECT_EQ(res.data, ref);
+}
+
+TEST(lex_Lexer, EmitsRawStringLiteral) {
+	ee::String ref{R"(r"This is raw string literal \ \")"};
+	ee::Token res;
+	test::Reader reader{ref};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	lexer >> res;
+
+	EXPECT_EQ(res.type, ee::Token::Type::STRING_LITERAL);
+	EXPECT_EQ(res.data, ref);
 }
 
 TEST(lex_Lexer, EmitsTokensSequentially) {

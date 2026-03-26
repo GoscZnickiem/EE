@@ -12,7 +12,7 @@ namespace ee::lex {
 
 Token Lexer::read_token() {
 	Token token{.type = Token::Type::INVALID, .data{}, .meta_data{}};
-	StateMachine automaton;
+	StateMachine automaton{token.data};
 
 	while (true) {
 		if (!character) {

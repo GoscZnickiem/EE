@@ -1,6 +1,8 @@
 #ifndef EE_LIB_LEXER_LEXERSTATEMACHINE
 #define EE_LIB_LEXER_LEXERSTATEMACHINE
 
+#include "types/Types.hpp"
+
 #include <compiler_unit/Unit.hpp>
 #include <optional>
 #include <types/Character.hpp>
@@ -11,6 +13,8 @@ namespace ee::lex {
 
 class StateMachine {
 public:
+	explicit StateMachine(String& buffered_word) : buffer(&buffered_word) {}
+
 	enum class CharResult {
 		ACCEPT,
 		DISCARD,
@@ -27,32 +31,35 @@ private:
 	enum class State {
 		INIT,
 		SLASH,
+		DOT,
 		COMMENT_LINE,
 		COMMENT_BLOCK,
 		COMMENT_STAR,
-		DOT,
 		STRING_LITERAL,
+		RAW_STRING_LITERAL,
 		NUMERIC_LITERAL,
 		CHAR_LITERAL,
-		IDENTIFIER,
+		NAME,
 		SYMBOL,
 	};
 
 	[[nodiscard]] Result state_init(Char c);
 	[[nodiscard]] Result state_slash(Char c);
+	[[nodiscard]] Result state_dot(Char c);
 	[[nodiscard]] Result state_comment_line(Char c);
 	[[nodiscard]] Result state_comment_block(Char c);
 	[[nodiscard]] Result state_comment_star(Char c);
-	[[nodiscard]] Result state_dot(Char c);
 	[[nodiscard]] Result state_string_literal(Char c);
+	[[nodiscard]] Result state_raw_string_literal(Char c);
 	[[nodiscard]] Result state_numeric_literal(Char c);
 	[[nodiscard]] Result state_char_literal(Char c);
-	[[nodiscard]] Result state_identifier(Char c);
+	[[nodiscard]] Result state_name(Char c);
 	[[nodiscard]] Result state_symbol(Char c);
 
 	[[nodiscard]] Result ret(State s, CharResult c);
 	[[nodiscard]] Result ret(State s, CharResult c, Token::Type t);
 
+	const String* buffer;
 	State state{State::INIT};
 };
 

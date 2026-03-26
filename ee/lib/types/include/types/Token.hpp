@@ -11,7 +11,7 @@ class Token {
 public:
 	enum class Type {
 		INVALID,
-		IDENTIFIER,
+		NAME,
 		SYMBOL,
 		NUMERIC_LITERAL,
 		STRING_LITERAL,
