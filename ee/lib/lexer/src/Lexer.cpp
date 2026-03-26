@@ -1,5 +1,7 @@
 #include "lexer/Lexer.hpp"
 
+#include "LexerStateMachine.hpp"
+
 #include <cassert>
 #include <types/Character.hpp>
 #include <types/Token.hpp>
@@ -53,7 +55,7 @@ Lexer::emitted_type Lexer::emit() {
 	if (state == State::INIT) {
 		buffer = read_token();
 		state = State::READY;
-	} else if(state == State::LAST) {
+	} else if (state == State::LAST) {
 		state = State::DONE;
 		return buffer;
 	}

@@ -1,5 +1,6 @@
+#include "LexerStateMachine.hpp"
+
 #include "lexer/Exception.hpp"
-#include "lexer/Lexer.hpp"
 
 #include <cctype>
 #include <optional>
@@ -10,7 +11,7 @@
 
 namespace ee::lex {
 
-Lexer::StateMachine::Result Lexer::StateMachine::step(Char c) {
+StateMachine::Result StateMachine::step(Char c) {
 	switch (state) {
 		case State::INIT		   : return state_init(c);
 		case State::COMMENT_LINE   : return state_comment_line(c);
@@ -26,7 +27,7 @@ Lexer::StateMachine::Result Lexer::StateMachine::step(Char c) {
 	}
 }
 
-std::optional<Token::Type> Lexer::StateMachine::pull_last() const {
+std::optional<Token::Type> StateMachine::pull_last() const {
 	switch (state) {
 		case State::INIT		   : [[fallthrough]];
 		case State::COMMENT_LINE   : [[fallthrough]];
@@ -42,17 +43,17 @@ std::optional<Token::Type> Lexer::StateMachine::pull_last() const {
 	}
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::ret(State s, CharResult c) {
+StateMachine::Result StateMachine::ret(State s, CharResult c) {
 	state = s;
 	return {c, std::nullopt};
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::ret(State s, CharResult c, Token::Type t) {
+StateMachine::Result StateMachine::ret(State s, CharResult c, Token::Type t) {
 	state = s;
 	return {c, t};
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_init(Char c) {
+StateMachine::Result StateMachine::state_init(Char c) {
 	if (std::isspace(c) != 0) return ret(State::INIT, CharResult::DISCARD);
 	if (c == ';') return ret(State::INIT, CharResult::ACCEPT, Token::Type::SEMICOLON);
 	if (c == ',') return ret(State::INIT, CharResult::ACCEPT, Token::Type::COMMA);
@@ -69,45 +70,46 @@ Lexer::StateMachine::Result Lexer::StateMachine::state_init(Char c) {
 	throw std::runtime_error("what the fuck happened? What is this: '" + std::to_string(c) + "'.");
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_slash(Char c) {
+StateMachine::Result StateMachine::state_slash(Char c) {
 	if (c == '/') return ret(State::COMMENT_LINE, CharResult::CLEAR);
 	if (c == '*') return ret(State::COMMENT_BLOCK, CharResult::CLEAR);
 	return ret(State::SYMBOL, CharResult::ACCEPT);
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_comment_line(Char c) {
+StateMachine::Result StateMachine::state_comment_line(Char c) {
 	return ret(c == '\n' ? State::INIT : State::COMMENT_LINE, CharResult::DISCARD);
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_comment_block(Char c) {
+StateMachine::Result StateMachine::state_comment_block(Char c) {
 	return ret(c == '*' ? State::COMMENT_STAR : State::COMMENT_BLOCK, CharResult::DISCARD);
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_comment_star(Char c) {
+StateMachine::Result StateMachine::state_comment_star(Char c) {
 	return ret(c == '/' ? State::INIT : State::COMMENT_BLOCK, CharResult::DISCARD);
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_dot(Char c) {
+StateMachine::Result StateMachine::state_dot(Char c) {
 	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_string_literal(Char c) {
+StateMachine::Result StateMachine::state_string_literal(Char c) {
+	if (c == '"') return ret(State::INIT, CharResult::ACCEPT, Token::Type::STRING_LITERAL);
+	if (c == '\n') throw std::runtime_error("Newline character inside string literal!");
+}
+
+StateMachine::Result StateMachine::state_numeric_literal(Char c) {
 	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_numeric_literal(Char c) {
+StateMachine::Result StateMachine::state_char_literal(Char c) {
 	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_char_literal(Char c) {
+StateMachine::Result StateMachine::state_identifier(Char c) {
 	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
-Lexer::StateMachine::Result Lexer::StateMachine::state_identifier(Char c) {
-	throw std::runtime_error("not implemented " + std::to_string(c));
-}
-
-Lexer::StateMachine::Result Lexer::StateMachine::state_symbol(Char c) {
+StateMachine::Result StateMachine::state_symbol(Char c) {
 	throw std::runtime_error("not implemented " + std::to_string(c));
 }
 
