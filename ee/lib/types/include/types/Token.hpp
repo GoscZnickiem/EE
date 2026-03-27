@@ -4,6 +4,8 @@
 #include "types/Types.hpp"
 
 #include <cstddef>
+#include <ostream>
+#include <string>
 
 namespace ee {
 
@@ -31,10 +33,16 @@ public:
 		auto operator<=>(const MetaData&) const = default;
 	};
 
+	[[nodiscard]] std::string to_string() const;
+
 	Type type;
 	String data;
 	MetaData meta_data;
 };
+
+inline std::ostream& operator<<(std::ostream& s, Token c) {
+	return s << c.to_string();
+}
 
 } // namespace ee
 

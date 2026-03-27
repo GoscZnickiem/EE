@@ -4,6 +4,8 @@
 #include "types/Types.hpp"
 
 #include <cstddef>
+#include <ostream>
+#include <string>
 
 namespace ee {
 
@@ -20,7 +22,13 @@ public:
 	[[nodiscard]] Char operator*() const noexcept {
 		return c;
 	}
+
+	[[nodiscard]] std::string to_string() const;
 };
+
+inline std::ostream& operator<<(std::ostream& s, Character c) {
+	return s << c.to_string();
+}
 
 } // namespace ee
 
