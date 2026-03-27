@@ -7,7 +7,7 @@ build:
 	cmake --build --preset clang-debug
 
 test: build
-	ctest --test-dir build/clang-debug
+	ctest --test-dir build/clang-debug --output-on-failure
 
 clean:
 	rm -rf build/clang-debug

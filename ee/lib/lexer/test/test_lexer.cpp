@@ -113,19 +113,9 @@ TEST(lex_Lexer, EmitsStringLiteral) {
 	EXPECT_EQ(res.data, ref);
 }
 
-TEST(lex_Lexer, EmitsNumericLiteral) {
-	ee::String ref{"0XA55BffI64"};
-	test::Reader reader{ref};
-	ee::lex::Lexer lexer;
-
-	lexer << reader;
-
-	EXPECT_EQ(lexer.emit().data, ref);
-}
-
 TEST(lex_Lexer, EmitsNumericLiterals) {
-	std::vector<ee::String> refs{"23",	  "0B010110", "0o23577i", "0XA55BffI64", "2137Usize", "0000000003",
-								 ".9F32", "17.",	  "239.199f", "10.f64",		 "5e10",	  "0.2E-30F64"};
+	std::vector<ee::String> refs{"23", "0B010110", "0o23577i", "0XA55BffI64", "2137Usize", "0000000003",
+								 ".9F32", "17.", "239.199f", "10.f64", "5e10", "0.2E-30F64"};
 	auto ref = refs | std::views::join_with(' ') | std::ranges::to<ee::String>();
 	test::Reader reader{ref};
 	ee::lex::Lexer lexer;
@@ -139,6 +129,47 @@ TEST(lex_Lexer, EmitsNumericLiterals) {
 		EXPECT_EQ(res.type, ee::Token::Type::NUMERIC_LITERAL);
 		EXPECT_EQ(res.data, refs[i++]);
 	}
+}
+
+TEST(lex_Lexer, EmitsCharacterLiteral) {
+	ee::String ref1{"'a'"};
+	ee::String ref2{"\''"};
+	ee::Token res1;
+	ee::Token res2;
+	test::Reader reader{ref1 + ref2};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	lexer >> res1 >> res2;
+
+	EXPECT_EQ(res1.type, ee::Token::Type::CHAR_LITERAL);
+	EXPECT_EQ(res1.data, ref1);
+	EXPECT_EQ(res2.type, ee::Token::Type::CHAR_LITERAL);
+	EXPECT_EQ(res2.data, ref2);
+}
+
+TEST(lex_Lexer, EmitsSymbols) {
+	ee::String ref1{"-->&*#"};
+	ee::String ref2{".%"};
+	ee::String ref3{"."};
+	ee::Token res1;
+	ee::Token res2;
+	ee::Token res3;
+	ee::Token tmp;
+	test::Reader reader{ref1 + ";" + ref2 + " " + ref3};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	lexer >> res1 >> tmp >> res2 >> tmp >> res3;
+
+	EXPECT_EQ(res1.type, ee::Token::Type::SYMBOL);
+	EXPECT_EQ(res1.data, ref1);
+	EXPECT_EQ(res2.type, ee::Token::Type::SYMBOL);
+	EXPECT_EQ(res2.data, ref2);
+	EXPECT_EQ(res3.type, ee::Token::Type::SYMBOL);
+	EXPECT_EQ(res3.data, ref3);
 }
 
 TEST(lex_Lexer, EmitsTokensSequentially) {

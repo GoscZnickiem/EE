@@ -36,13 +36,17 @@ private:
 		ZERO_B,
 		ZERO_O,
 		ZERO_X,
+
 		COMMENT_LINE,
 		COMMENT_BLOCK,
 		COMMENT_STAR,
+
 		STRING_LITERAL,
 		STRING_LITERAL_ESC,
 		RAW_STRING_LITERAL,
 		CHAR_LITERAL,
+		CHAR_LITERAL_ESC,
+
 		NUMERIC_LITERAL,
 		NUMERIC_BIN_LITERAL,
 		NUMERIC_OCT_LITERAL,
@@ -51,6 +55,7 @@ private:
 		FLOAT_E,
 		FLOAT_E_LITERAL,
 		NUMERIC_LITERAL_SUFIX,
+
 		NAME,
 		SYMBOL,
 	};
@@ -71,6 +76,7 @@ private:
 	[[nodiscard]] Result state_string_literal_esc(Char c);
 	[[nodiscard]] Result state_raw_string_literal(Char c);
 	[[nodiscard]] Result state_char_literal(Char c);
+	[[nodiscard]] Result state_char_literal_esc(Char c);
 
 	[[nodiscard]] Result state_numeric_literal(Char c);
 	[[nodiscard]] Result state_numeric_bin_literal(Char c);

@@ -2,6 +2,8 @@
 
 #include "lexer/Exception.hpp"
 
+#include <algorithm>
+#include <array>
 #include <cctype>
 #include <optional>
 #include <stdexcept>
@@ -74,7 +76,12 @@ bool is_hex_digit(Char c) {
 }
 
 bool is_symbol(Char c) {
-	return std::ispunct(c) != 0 && c != '_' && c != '{' && c != '}';
+	constexpr auto legal_symbols = std::array{
+		'!', '@', '#', '$', '%', '^', '&', '*',
+		'(', ')', '[', ']', '-', '+', '=', ':',
+		'|', '\\', '<', '>', '.', '/', '?', '~', '`'
+	};
+	return std::ranges::contains(legal_symbols, c);
 }
 
 } // namespace
@@ -94,6 +101,8 @@ StateMachine::Result StateMachine::step(Char c) {
 		case State::STRING_LITERAL		 : return state_string_literal(c);
 		case State::STRING_LITERAL_ESC	 : return state_string_literal_esc(c);
 		case State::RAW_STRING_LITERAL	 : return state_raw_string_literal(c);
+		case State::CHAR_LITERAL		 : return state_char_literal(c);
+		case State::CHAR_LITERAL_ESC	 : return state_char_literal_esc(c);
 		case State::NUMERIC_LITERAL		 : return state_numeric_literal(c);
 		case State::NUMERIC_BIN_LITERAL	 : return state_numeric_bin_literal(c);
 		case State::NUMERIC_OCT_LITERAL	 : return state_numeric_oct_literal(c);
@@ -102,7 +111,6 @@ StateMachine::Result StateMachine::step(Char c) {
 		case State::FLOAT_E				 : return state_float_e(c);
 		case State::FLOAT_E_LITERAL		 : return state_float_e_literal(c);
 		case State::NUMERIC_LITERAL_SUFIX: return state_numeric_literal_sufix(c);
-		case State::CHAR_LITERAL		 : return state_char_literal(c);
 		case State::NAME				 : return state_name(c);
 		case State::SYMBOL				 : return state_symbol(c);
 	}
@@ -117,7 +125,8 @@ std::optional<Token::Type> StateMachine::pull_last() const {
 		case State::STRING_LITERAL		 : [[fallthrough]];
 		case State::STRING_LITERAL_ESC	 : [[fallthrough]];
 		case State::RAW_STRING_LITERAL	 : throw err::UnterminatedStringError("Missing termination character '\"'.");
-		case State::CHAR_LITERAL		 : throw err::UnterminatedCharacterLiteralError("Missing termination character \"'\".");
+		case State::CHAR_LITERAL		 : [[fallthrough]];
+		case State::CHAR_LITERAL_ESC	 : throw err::UnterminatedCharacterLiteralError("Missing termination character \"'\".");
 		case State::ZERO				 : [[fallthrough]];
 		case State::NUMERIC_LITERAL		 : [[fallthrough]];
 		case State::NUMERIC_BIN_LITERAL	 : [[fallthrough]];
@@ -222,23 +231,31 @@ StateMachine::Result StateMachine::state_comment_star(Char c) {
 StateMachine::Result StateMachine::state_string_literal(Char c) {
 	if (c == '"') return ret(Token::Type::STRING_LITERAL, CharResult::ACCEPT);
 	if (c == '\\') return ret(State::STRING_LITERAL_ESC, CharResult::ACCEPT);
-	if (c == '\n') throw std::runtime_error("Newline character inside string literal!");
+	if (c == '\n') throw err::UnterminatedStringError("Missing termination character '\"'.");
 	return ret(State::STRING_LITERAL, CharResult::ACCEPT);
 }
 
 StateMachine::Result StateMachine::state_string_literal_esc(Char c) {
-	if (c == '\n') throw std::runtime_error("Newline character inside string literal!");
+	if (c == '\n') throw err::UnterminatedStringError("Missing termination character '\"'.");
 	return ret(State::STRING_LITERAL, CharResult::ACCEPT);
 }
 
 StateMachine::Result StateMachine::state_raw_string_literal(Char c) {
 	if (c == '"') return ret(Token::Type::STRING_LITERAL, CharResult::ACCEPT);
-	if (c == '\n') throw std::runtime_error("Newline character inside string literal!");
+	if (c == '\n') throw err::UnterminatedStringError("Missing termination character '\"'.");
 	return ret(State::RAW_STRING_LITERAL, CharResult::ACCEPT);
 }
 
 StateMachine::Result StateMachine::state_char_literal(Char c) {
-	throw std::runtime_error("not implemented " + pretty_char(c));
+	if (c == '\'') return ret(Token::Type::CHAR_LITERAL, CharResult::ACCEPT);
+	if (c == '\\') return ret(State::CHAR_LITERAL_ESC, CharResult::ACCEPT);
+	if (c == '\n') throw err::UnterminatedCharacterLiteralError("Missing termination character \"'\".");
+	return ret(State::CHAR_LITERAL, CharResult::ACCEPT);
+}
+
+StateMachine::Result StateMachine::state_char_literal_esc(Char c) {
+	if (c == '\n') throw err::UnterminatedCharacterLiteralError("Missing termination character \"'\".");
+	return ret(State::CHAR_LITERAL, CharResult::ACCEPT);
 }
 
 StateMachine::Result StateMachine::state_numeric_literal(Char c) {
@@ -308,7 +325,8 @@ StateMachine::Result StateMachine::state_name(Char c) {
 }
 
 StateMachine::Result StateMachine::state_symbol(Char c) {
-	throw std::runtime_error("not implemented " + pretty_char(c));
+	if (is_symbol(c)) return ret(State::SYMBOL, CharResult::ACCEPT);
+	return ret(Token::Type::SYMBOL, CharResult::LEAVE);
 }
 
 } // namespace ee::lex
