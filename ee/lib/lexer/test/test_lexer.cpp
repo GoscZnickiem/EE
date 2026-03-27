@@ -6,6 +6,8 @@
 
 #include <cstddef>
 #include <gtest/gtest.h>
+#include <ranges>
+#include <vector>
 
 namespace test {
 
@@ -20,7 +22,7 @@ public:
 
 	ee::Character emit() override {
 		return {
-			.c = data[index++], .meta_data{.line = 0, .column = column++}
+			.c = data[index++], .meta_data{.line = 1, .column = column++}
 		};
 	}
 
@@ -97,6 +99,48 @@ TEST(lex_Lexer, EmitsRawStringLiteral) {
 	EXPECT_EQ(res.data, ref);
 }
 
+TEST(lex_Lexer, EmitsStringLiteral) {
+	ee::String ref{R"("This is string literal \" ")"};
+	ee::Token res;
+	test::Reader reader{ref};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	lexer >> res;
+
+	EXPECT_EQ(res.type, ee::Token::Type::STRING_LITERAL);
+	EXPECT_EQ(res.data, ref);
+}
+
+TEST(lex_Lexer, EmitsNumericLiteral) {
+	ee::String ref{"0XA55BffI64"};
+	test::Reader reader{ref};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().data, ref);
+}
+
+TEST(lex_Lexer, EmitsNumericLiterals) {
+	std::vector<ee::String> refs{"23",	  "0B010110", "0o23577i", "0XA55BffI64", "2137Usize", "0000000003",
+								 ".9F32", "17.",	  "239.199f", "10.f64",		 "5e10",	  "0.2E-30F64"};
+	auto ref = refs | std::views::join_with(' ') | std::ranges::to<ee::String>();
+	test::Reader reader{ref};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	std::size_t i = 0;
+	while (lexer) {
+		ee::Token res;
+		lexer >> res;
+		EXPECT_EQ(res.type, ee::Token::Type::NUMERIC_LITERAL);
+		EXPECT_EQ(res.data, refs[i++]);
+	}
+}
+
 TEST(lex_Lexer, EmitsTokensSequentially) {
 	test::Reader reader{";,{}"};
 	ee::lex::Lexer lexer;
@@ -137,6 +181,18 @@ TEST(lex_Lexer, IgnoresBlockComment) {
 
 	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_L);
 	EXPECT_EQ(lexer.emit().type, ee::Token::Type::BRACE_R);
+}
+
+TEST(lex_Lexer, EmitsMetaData) {
+	test::Reader reader{"Token   ;   \"Hello\";"};
+	ee::lex::Lexer lexer;
+
+	lexer << reader;
+
+	EXPECT_EQ(lexer.emit().meta_data, (ee::Token::MetaData{.line_start = 1, .column_start = 1, .line_end = 1, .column_end = 5}));
+	EXPECT_EQ(lexer.emit().meta_data, (ee::Token::MetaData{.line_start = 1, .column_start = 9, .line_end = 1, .column_end = 9}));
+	EXPECT_EQ(lexer.emit().meta_data, (ee::Token::MetaData{.line_start = 1, .column_start = 13, .line_end = 1, .column_end = 19}));
+	EXPECT_EQ(lexer.emit().meta_data, (ee::Token::MetaData{.line_start = 1, .column_start = 20, .line_end = 1, .column_end = 20}));
 }
 
 TEST(lex_Lexer, IsDoneAfterLastToken) {

@@ -31,11 +31,11 @@ Token Lexer::read_token() {
 
 		if (result_char == StateMachine::CharResult::ACCEPT) {
 			if (token.data.empty()) {
-				token.meta_data.lineStart = cc.meta_data.line;
-				token.meta_data.columnStart = cc.meta_data.column;
+				token.meta_data.line_start = cc.meta_data.line;
+				token.meta_data.column_start = cc.meta_data.column;
 			}
-			token.meta_data.lineEnd = cc.meta_data.line;
-			token.meta_data.columnEnd = cc.meta_data.column;
+			token.meta_data.line_end = cc.meta_data.line;
+			token.meta_data.column_end = cc.meta_data.column;
 			token.data += c;
 		} else if (result_char == StateMachine::CharResult::CLEAR) {
 			token.data.clear();

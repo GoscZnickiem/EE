@@ -32,13 +32,25 @@ private:
 		INIT,
 		SLASH,
 		DOT,
+		ZERO,
+		ZERO_B,
+		ZERO_O,
+		ZERO_X,
 		COMMENT_LINE,
 		COMMENT_BLOCK,
 		COMMENT_STAR,
 		STRING_LITERAL,
+		STRING_LITERAL_ESC,
 		RAW_STRING_LITERAL,
-		NUMERIC_LITERAL,
 		CHAR_LITERAL,
+		NUMERIC_LITERAL,
+		NUMERIC_BIN_LITERAL,
+		NUMERIC_OCT_LITERAL,
+		NUMERIC_HEX_LITERAL,
+		FLOAT_LITERAL,
+		FLOAT_E,
+		FLOAT_E_LITERAL,
+		NUMERIC_LITERAL_SUFIX,
 		NAME,
 		SYMBOL,
 	};
@@ -46,18 +58,34 @@ private:
 	[[nodiscard]] Result state_init(Char c);
 	[[nodiscard]] Result state_slash(Char c);
 	[[nodiscard]] Result state_dot(Char c);
+	[[nodiscard]] Result state_zero(Char c);
+	[[nodiscard]] Result state_zero_b(Char c);
+	[[nodiscard]] Result state_zero_o(Char c);
+	[[nodiscard]] Result state_zero_x(Char c);
+
 	[[nodiscard]] Result state_comment_line(Char c);
 	[[nodiscard]] Result state_comment_block(Char c);
 	[[nodiscard]] Result state_comment_star(Char c);
+
 	[[nodiscard]] Result state_string_literal(Char c);
+	[[nodiscard]] Result state_string_literal_esc(Char c);
 	[[nodiscard]] Result state_raw_string_literal(Char c);
-	[[nodiscard]] Result state_numeric_literal(Char c);
 	[[nodiscard]] Result state_char_literal(Char c);
+
+	[[nodiscard]] Result state_numeric_literal(Char c);
+	[[nodiscard]] Result state_numeric_bin_literal(Char c);
+	[[nodiscard]] Result state_numeric_oct_literal(Char c);
+	[[nodiscard]] Result state_numeric_hex_literal(Char c);
+	[[nodiscard]] Result state_float_literal(Char c);
+	[[nodiscard]] Result state_float_e(Char c);
+	[[nodiscard]] Result state_float_e_literal(Char c);
+	[[nodiscard]] Result state_numeric_literal_sufix(Char c);
+
 	[[nodiscard]] Result state_name(Char c);
 	[[nodiscard]] Result state_symbol(Char c);
 
 	[[nodiscard]] Result ret(State s, CharResult c);
-	[[nodiscard]] Result ret(State s, CharResult c, Token::Type t);
+	[[nodiscard]] Result ret(Token::Type t, CharResult c);
 
 	const String* buffer;
 	State state{State::INIT};

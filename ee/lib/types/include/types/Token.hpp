@@ -23,10 +23,12 @@ public:
 	};
 
 	struct MetaData {
-		std::size_t lineStart;
-		std::size_t columnStart;
-		std::size_t lineEnd;
-		std::size_t columnEnd;
+		std::size_t line_start;
+		std::size_t column_start;
+		std::size_t line_end;
+		std::size_t column_end;
+
+		auto operator<=>(const MetaData&) const = default;
 	};
 
 	Type type;
